@@ -8,21 +8,21 @@ import android.widget.TextView;
 
 public class Detalji extends AppCompatActivity {
 
-    Muzicar muzicar;
+    Musician musician;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalji);
 
-        muzicar = (Muzicar)getIntent().getSerializableExtra("Muzicar");
+        musician = (Musician)getIntent().getSerializableExtra("Musician");
 
         TextView imetv = (TextView)findViewById(R.id.detaljiIme);
-        imetv.setText(muzicar.getIme());
+        imetv.setText(musician.getName());
 
         imetv.setOnClickListener(v -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(muzicar.getWeb()));
+            i.setData(Uri.parse(musician.getWeb()));
             startActivity(i);
         });
     }
