@@ -34,9 +34,9 @@ public class Pocetni extends AppCompatActivity implements MusiciansListFragment.
         final ListView listView = (ListView)findViewById(R.id.listView);
         final EditText editText = (EditText)findViewById(R.id.editText);
 
-        //listView.setAdapter(new ArrayAdapter<>(this, R.layout.element_liste, R.id.textView2, unosi));
+        /*listView.setAdapter(new ArrayAdapter<>(this, R.layout.element_liste, R.id.textView2, unosi));
 
-        /*button.setOnClickListener(v -> {
+        button.setOnClickListener(v -> {
             unosi.add(0, new Musician(editText.getText().toString()));
             ((ArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
         });*/

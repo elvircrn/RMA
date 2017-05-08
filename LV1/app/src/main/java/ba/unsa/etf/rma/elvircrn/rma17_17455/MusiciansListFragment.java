@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link MusiciansListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MusiciansListFragment extends Fragment {
+public class MusiciansListFragment extends Fragment implements SearchArtist.IOnMusicianSearchDone {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,6 +42,14 @@ public class MusiciansListFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     OnItemClick oic;
+    ListView listView;
+
+    @Override
+    public void onDone(MusicianDTO[] res) {
+        for (MusicianDTO musicianDTO : res) {
+            musicians.add(new Musician(musicianDTO));
+        }
+    }
 
     public interface OnItemClick {
         public void onItemClicked(int pos);
@@ -89,7 +97,7 @@ public class MusiciansListFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ListView listView = (ListView)getView().findViewById(R.id.listView);
+        listView = (ListView)getView().findViewById(R.id.listView);
 
         if (getArguments().containsKey("Alista")) {
             musicians = getArguments().getParcelableArrayList("Alista");
@@ -114,8 +122,7 @@ public class MusiciansListFragment extends Fragment {
         final EditText editText = (EditText)getView().findViewById(R.id.editText);
 
         button.setOnClickListener(v -> {
-            musicians.add(0, new Musician(editText.getText().toString()));
-            ((ArrayAdapter)listView.getAdapter()).notifyDataSetChanged();
+            new SearchArtist(MusiciansListFragment.this).execute(editText.getText().toString());
         });
 
     }
