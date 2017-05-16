@@ -1,6 +1,7 @@
 package ba.unsa.etf.rma.elvircrn.rma17_17455;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -46,8 +48,11 @@ public class MusiciansListFragment extends Fragment implements SearchArtist.IOnM
 
     @Override
     public void onDone(MusicianDTO[] res) {
-        for (MusicianDTO musicianDTO : res) {
-            musicians.add(new Musician(musicianDTO));
+        if (res != null) {
+            for (MusicianDTO musicianDTO : res) {
+                musicians.add(new Musician(musicianDTO));
+            }
+            ((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
         }
     }
 

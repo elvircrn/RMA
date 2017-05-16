@@ -26,6 +26,11 @@ public class SearchArtist extends AsyncTask<String, Integer, Void> {
     }
 
     @Override
+    protected void onPostExecute(Void v) {
+        caller.onDone(musicians);
+    }
+
+    @Override
     protected Void doInBackground(String... params) {
         String query;
         URL url;
@@ -40,7 +45,7 @@ public class SearchArtist extends AsyncTask<String, Integer, Void> {
             JsonObject jObj = (JsonObject)new JsonParser().parse(result);
             String str = jObj.getAsJsonObject("artists").getAsJsonArray("items").toString();
             Log.d("jObj: ", str);
-            MusicianDTO[] musicians = gson.fromJson(str, MusicianDTO[].class);
+            musicians = gson.fromJson(str, MusicianDTO[].class);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
