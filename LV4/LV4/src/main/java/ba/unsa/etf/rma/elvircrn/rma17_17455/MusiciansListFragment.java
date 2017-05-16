@@ -133,7 +133,7 @@ public class MusiciansListFragment extends Fragment implements SearchArtist.IOnM
         button.setOnClickListener(v -> {
 
             /*new SearchArtist(MusiciansListFragment.this).execute(editText.getText().toString());*/
-
+            musicians.clear();
             Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity(), MyService.class);
             mReceiver = new MyResultReceiver(new Handler());
             mReceiver.setReceiver(MusiciansListFragment.this);
