@@ -4,8 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.io.Serializable
 
-data class Musician(var id: String, var name: String, var surname: String = "", var genre: String  = "", var web: String = "", var bio: String = "") : Serializable, Parcelable {
-    constructor(name: String) : this ("", name, "", "", "", "")
+data class Musician(var id: Int, var name: String, var surname: String = "", var genre: String  = "", var web: String = "", var bio: String = "") : Serializable, Parcelable {
+    constructor(name: String = "") : this (-1, name, "", "", "", "")
 
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<Musician> = object : Parcelable.Creator<Musician> {
@@ -14,13 +14,13 @@ data class Musician(var id: String, var name: String, var surname: String = "", 
         }
     }
 
-    constructor(musicianDTO: MusicianDTO) : this(musicianDTO.id, musicianDTO.name, "", "", "", "")
-    constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString())
+    constructor(musicianDTO: MusicianDTO) : this(-1, musicianDTO.name, "", "", "", "")
+    constructor(source: Parcel) : this(source.readInt(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString())
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeString(id)
+        dest?.writeInt(id)
         dest?.writeString(name)
         dest?.writeString(surname)
         dest?.writeString(genre)

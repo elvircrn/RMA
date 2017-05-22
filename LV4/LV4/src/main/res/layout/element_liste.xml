@@ -16,7 +16,7 @@
         android:src="@drawable/slika1" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="67dp"
         android:layout_weight="0.04"
