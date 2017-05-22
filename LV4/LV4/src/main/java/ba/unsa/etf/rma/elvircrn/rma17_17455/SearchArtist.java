@@ -41,11 +41,10 @@ public class SearchArtist extends AsyncTask<String, Integer, Void> {
             HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             String result = Helpers.convertStreamToString(in);
-            Gson gson = new Gson();
+
             JsonObject jObj = (JsonObject)new JsonParser().parse(result);
             String str = jObj.getAsJsonObject("artists").getAsJsonArray("items").toString();
             Log.d("jObj: ", str);
-            musicians = gson.fromJson(str, MusicianDTO[].class);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

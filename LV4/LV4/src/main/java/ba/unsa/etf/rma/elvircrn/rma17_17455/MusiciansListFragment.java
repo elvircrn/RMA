@@ -1,12 +1,11 @@
 package ba.unsa.etf.rma.elvircrn.rma17_17455;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
 
 
 /**
@@ -28,7 +31,7 @@ import java.util.ArrayList;
  * Use the {@link MusiciansListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MusiciansListFragment extends Fragment implements SearchArtist.IOnMusicianSearchDone {
+public class MusiciansListFragment extends Fragment implements SearchArtist.IOnMusicianSearchDone, MyResultReceiver.Receiver {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,6 +45,7 @@ public class MusiciansListFragment extends Fragment implements SearchArtist.IOnM
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private MyResultReceiver mReceiver;
 
     OnItemClick oic;
     ListView listView;
@@ -127,9 +131,39 @@ public class MusiciansListFragment extends Fragment implements SearchArtist.IOnM
         final EditText editText = (EditText)getView().findViewById(R.id.editText);
 
         button.setOnClickListener(v -> {
-            new SearchArtist(MusiciansListFragment.this).execute(editText.getText().toString());
+
+            /*new SearchArtist(MusiciansListFragment.this).execute(editText.getText().toString());*/
+            musicians.clear();
+            Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity(), MyService.class);
+            mReceiver = new MyResultReceiver(new Handler());
+            mReceiver.setReceiver(MusiciansListFragment.this);
+            intent.putExtra("textQuerya", editText.getText().toString());
+            intent.putExtra("receiver", mReceiver);
+            getActivity().startService(intent);
+
+
         });
 
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+
+        switch(resultCode) {
+            case MyService.STATUS_FINISHED:
+                Gson gson = new Gson();
+                MusicianDTO[] res = gson.fromJson(resultData.getString("results"), MusicianDTO[].class);
+                for (MusicianDTO musicianDTO : res) {
+                    musicians.add(new Musician(musicianDTO));
+                }
+                ((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
+            break;
+            case MyService.STATUS_ERROR:
+                String error = resultData.getString(Intent.EXTRA_TEXT);
+                Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+            break;
+
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
