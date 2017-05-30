@@ -2,22 +2,16 @@ package ba.unsa.etf.rma.elvircrn.rma17_17455
 
 import android.app.Fragment
 import android.app.FragmentManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.app.LoaderManager
+import android.content.*
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.telecom.Call
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.ListView
+import android.widget.*
 import com.facebook.stetho.Stetho
 
 import java.util.ArrayList
@@ -81,12 +75,37 @@ class Pocetni : AppCompatActivity(), MusiciansListFragment.OnItemClick {
         if (musiciansListFragment == null) {
             musiciansListFragment = MusiciansListFragment()
             val arguments = Bundle()
+
+
+
+            var cr = contentResolver
+            var kolone = arrayOf(MuzicarDBOpenHelper.MUZICAR_ID,
+                    MuzicarDBOpenHelper.MUZICAR_IME,
+                    MuzicarDBOpenHelper.MUZICAR_ZANR)
+            var adresa = ContentUris.withAppendedId(Uri.parse("content://rma.provider.muzicari/elements"), 1)
+            var cur = cr.query(adresa, kolone, null, null, null)
+
+            if (cur != null) {
+                while (cur.moveToNext()) {
+                    unosi.add(Musician(id = cur.getInt(0),
+                            name = cur.getString(1),
+                            genre = cur.getString(2)))
+                }
+            }
+
+
+
+
+
+
             arguments.putParcelableArrayList("Alista", unosi)
             musiciansListFragment.arguments = arguments
             fm.beginTransaction().replace(R.id.placeF1, musiciansListFragment, "List").commit()
         } else {
             fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
+
+
     }
 
     override fun onItemClicked(pos: Int) {

@@ -5,17 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.app.Fragment
+import android.app.LoaderManager
+import android.content.ContentUris
+import android.content.Loader
+import android.os.Build
 import android.os.Handler
+import android.support.annotation.RequiresApi
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 
 import com.google.gson.Gson
 
@@ -76,6 +75,7 @@ class MusiciansListFragment : Fragment(), SearchArtist.IOnMusicianSearchDone, My
 
         if (arguments.containsKey("Alista")) {
             musicians = arguments.getParcelableArrayList<Musician>("Alista")
+
             listView!!.adapter = ArrayAdapter(activity, R.layout.element_liste,
                     R.id.info, musicians)
         }
@@ -91,7 +91,7 @@ class MusiciansListFragment : Fragment(), SearchArtist.IOnMusicianSearchDone, My
         val button = view!!.findViewById(R.id.button) as Button
         val editText = view!!.findViewById(R.id.editText) as EditText
 
-        button.setOnClickListener { v ->
+        button.setOnClickListener { _ ->
 
             /*new SearchArtist(MusiciansListFragment.this).execute(editText.getText().toString());*/
             musicians.clear()
@@ -101,9 +101,10 @@ class MusiciansListFragment : Fragment(), SearchArtist.IOnMusicianSearchDone, My
             intent.putExtra("textQuerya", editText.text.toString().replace(" ", "%20"))
             intent.putExtra("receiver", mReceiver)
             activity.startService(intent)
-
-
         }
+
+
+
 
     }
 
